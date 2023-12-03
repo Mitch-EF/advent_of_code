@@ -1,8 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <ctype.h>
-
-char input[] = "g1ivm7ng";
+#include <stdbool.h>
 
 int main(int argc, char *argv[])
 {
@@ -21,10 +20,10 @@ int main(int argc, char *argv[])
     }
     
 
-
-    int is_first = 0;
-    int first;
-    int last;
+    bool two_nums = false;
+    bool is_first = true;
+    char first;
+    char last;
     char ch;
     int result = 0;
     for (ch = getc(fptr); ch != EOF; ch = getc(fptr)) {
@@ -32,20 +31,31 @@ int main(int argc, char *argv[])
 
         if (isdigit(ch) != 0)
         {
-            if (is_first == 0) {
-                first = (int) (ch - 48);
-                is_first = 1;
+            if (is_first) {
+                first = ch;
+                is_first = false;
             }
             else {
-                last = (int) (ch - 48);
+                last = ch;
+                two_nums = true;
             }
             
         }
         if (ch == '\n')
-        {
-            
-            result += (first + last);
-            is_first = 0;
+        {        
+            if (two_nums == false)
+            {
+                char temp[] = {first, first, '\0'};
+                result += atoi(temp);
+            }
+            else 
+            {
+                char temp[3] = {first, last, '\0'};
+                result += atoi(temp);
+            }   
+            printf("current result:%d\n",result);
+            is_first = true;
+            two_nums = false;
         }
     }
     fclose(fptr);
