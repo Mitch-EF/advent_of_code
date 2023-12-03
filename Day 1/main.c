@@ -1,31 +1,54 @@
 #include <stdio.h>
+#include <stdlib.h>
 #include <ctype.h>
 
 char input[] = "g1ivm7ng";
 
-int main()
+int main(int argc, char *argv[])
 {
-    int pair[2];
-    int pos = 0;
-    int index = 0;
-    char ch = input[pos];
-    
+
+    if (argc != 2) {
+        printf("%s\n", "Provide only one input file");
+        return 1;
+    }
+
+    FILE *fptr;
+    fptr = fopen(argv[1], "r");
+    if (fptr == NULL)
+    {
+        printf("File could not be opened");
+        return 1;
+    }
     
 
-    while(ch != '\0') {
-        //printf("%c", ch);
-        if (isdigit(ch) != 0 && ch != '\0') {
-            pair[index] = (int) (ch - 48);
-            index++;
+
+    int is_first = 0;
+    int first;
+    int last;
+    char ch;
+    int result = 0;
+    for (ch = getc(fptr); ch != EOF; ch = getc(fptr)) {
+        
+
+        if (isdigit(ch) != 0)
+        {
+            if (is_first == 0) {
+                first = (int) (ch - 48);
+                is_first = 1;
+            }
+            else {
+                last = (int) (ch - 48);
+            }
+            
         }
-        pos ++ ;
-        ch = input[pos];
+        if (ch == '\n')
+        {
+            
+            result += (first + last);
+            is_first = 0;
+        }
     }
-    
-    for(int i = 0; i < 2; i++) {
-        printf("%d", pair[i]);
-    }
-    printf("\n");
-    
+    fclose(fptr);
+    printf("The result is %d\n", result);
     return 0;
 }
